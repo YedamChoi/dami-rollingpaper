@@ -562,7 +562,7 @@
   // ── 비밀번호는 SHA-256 해시로만 비교 (평문 노출 방지) ──
   // 비밀번호 변경 시: 아래 OWNER_HASH 값을 새 비밀번호의 SHA-256 해시로 교체
   // 해시 생성 사이트: https://emn178.github.io/online-tools/sha256.html
-  const OWNER_HASH = "916b9b64f8afa962593dcbd380fced6851cedf508be335d4cd4c44b08a6d055b"; // change_me_later
+  const OWNER_HASH = "96d667d09812371722969d661033abfe4c97ce902d6ab15c5c922de166ecd997"; // change_me_later
 
   async function hashPw(pw) {
     const msgBuffer = new TextEncoder().encode(pw);
