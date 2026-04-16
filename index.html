@@ -559,6 +559,20 @@
     if (error) throw error;
   }
 
+  async function getPw() {
+    const { data } = await db.from('settings').select('value').eq('key', 'owner_pw').single();
+    return data ? data.value : null;
+  }
+
+  async function setPw(pw) {
+    const existing = await getPw();
+    if (existing !== null) {
+      await db.from('settings').update({ value: pw }).eq('key', 'owner_pw');
+    } else {
+      await db.from('settings').insert([{ key: 'owner_pw', value: pw }]);
+    }
+  }
+
   // ── UI helpers ──
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -626,25 +640,19 @@
   }
 
   async function confirmUnlock() {
-  const input = document.getElementById('unlockPw');
-  const val = input.value.trim();
-
-  const PASSWORD = "09278285y!";
-
-  if (val.length === 0) {
-    document.getElementById('unlockErr').textContent = '비밀번호를 입력해주세요.';
-    return;
+    const val = document.getElementById('unlockPw').value;
+    const pw = await getPw();
+    if (val === pw) {
+      closeModal('unlockModal');
+      isUnlocked = true;
+      updateOwnerBar();
+      renderNotes(await fetchNotes());
+      showToast('비공개 글이 열렸어요 🔓');
+    } else {
+      document.getElementById('unlockErr').textContent = '비밀번호가 틀렸어요.';
+      document.getElementById('unlockPw').value = '';
+    }
   }
-
-  if (val === PASSWORD) {
-    isUnlocked = true;
-    document.body.classList.add("unlocked-mode");
-    closeModal('unlockModal');
-  } else {
-    document.getElementById('unlockErr').textContent = '비밀번호가 틀렸어요.';
-    input.value = '';
-  }
-}
 
   function requestDelete(id) {
     pendingDeleteId = id;
