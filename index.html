@@ -626,19 +626,25 @@
   }
 
   async function confirmUnlock() {
-    const val = document.getElementById('unlockPw').value;
+  const input = document.getElementById('unlockPw');
+  const val = input.value.trim();
+
   const PASSWORD = "09278285y!";
-    if (val === pw) {
-      closeModal('unlockModal');
-      isUnlocked = true;
-      updateOwnerBar();
-      renderNotes(await fetchNotes());
-      showToast('비공개 글이 열렸어요 🔓');
-    } else {
-      document.getElementById('unlockErr').textContent = '비밀번호가 틀렸어요.';
-      document.getElementById('unlockPw').value = '';
-    }
+
+  if (val.length === 0) {
+    document.getElementById('unlockErr').textContent = '비밀번호를 입력해주세요.';
+    return;
   }
+
+  if (val === PASSWORD) {
+    isUnlocked = true;
+    document.body.classList.add("unlocked-mode");
+    closeModal('unlockModal');
+  } else {
+    document.getElementById('unlockErr').textContent = '비밀번호가 틀렸어요.';
+    input.value = '';
+  }
+}
 
   function requestDelete(id) {
     pendingDeleteId = id;
