@@ -158,7 +158,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0 16px 14px;
+    padding: 14px 16px 14px;
   }
   .name-input {
     flex: 1;
@@ -438,6 +438,7 @@
     <small style="display:block;font-size:10px;color:#aaa;margin-top:-8px;margin-bottom:12px;">Ai로 제작된 이미지 입니다.</small>
     <div class="profile-name">다미에게 응원 한마디 🙏</div>
     <div class="status-tag">구직 활동으로 멘헤라가 된 다미에게<br>응원 한마디씩 부탁드려요🤩</div>
+    <small style="display:block;font-size:10px;color:#aaa;margin-top:8px;">*멘헤라: 정신이 건강하지 않은 사람들을 일컫는 최신 유행어</small>
   </div>
 
   <div class="input-card">
@@ -702,7 +703,7 @@
         div.innerHTML = `<div class="lock-emoji">🔒</div><div class="lock-text">비공개 메시지<br>주인만 볼 수 있어요</div>`;
         div.onclick = () => openModal('unlockModal');
       } else {
-        const color = n.color || COLORS[i % COLORS.length];
+        const color = n.is_private ? 'note-2' : (n.color && n.color !== 'note-2' ? n.color : ['note-1','note-3','note-4','note-5'][i % 4]);
         div.className = `note ${color}`;
         const safe_msg = n.msg.replace(/</g,'&lt;').replace(/\n/g,'<br>');
         const safe_name = (n.name || '익명').replace(/</g,'&lt;');
@@ -726,8 +727,8 @@
     if (!msg) { showToast('내용을 입력해주세요 🙏'); return; }
     const isPrivate = document.getElementById('privateToggle').classList.contains('on');
     const name = document.getElementById('nameInput').value.trim() || '익명';
-    const color = COLORS[colorIdx % COLORS.length];
-    colorIdx++;
+    const color = isPrivate ? 'note-2' : ['note-1','note-3','note-4','note-5'][colorIdx % 4];
+    if (!isPrivate) colorIdx++;
 
     const btn = document.querySelector('.submit-btn');
     btn.textContent = '저장 중...';
